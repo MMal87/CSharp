@@ -7,6 +7,7 @@ namespace WordGame {
         public int counter;
         public string word;
         private readonly WordChoser wordChoser;
+        private List<char> guessedLetters = new List<char>();
 
         public Game(WordChoser wordChoser)
         {
@@ -17,27 +18,59 @@ namespace WordGame {
             
         }
      
-        public string GetWordToGuess(string guess)
+        public string GetWordToGuess(char guess)
         {
-            counter--;//decrement counter variable by 1
-            StringBuilder builder = new StringBuilder();//new instance of stringbuilder class
-            for (int i = 0; i < word.Length; i++) //starts loop that iterates over characters of 'guess'. i is the loop counter
-            {
-                char currentLetter = word[i];//retrieves the character at index i from 'word' string and assigns it to 'current letter'
+             counter--; // decrement counter variable by 1
+            StringBuilder builder = new StringBuilder(); // new instance of StringBuilder class
+             // initialize a list to store guessed letters
 
-                if (guess.Length > i && guess[i] == currentLetter) {//checks if character i in guess is same as currentletter
-                    builder.Append(currentLetter);//if letters match, currentletter is appended to 'builder'string
-                } else {
-                    builder.Append("_");//otherwise, underscore is appended to builder string
-                }
-            }
-            return builder.ToString();//converts builder string to regular string and returns it
+
+    for (int i = 0; i < word.Length; i++) // loop over characters of 'word'. i is the loop counter
+    {
+        char currentLetter = word[i]; // retrieve the character at index i from 'word' string and assign it to 'currentLetter'
+
+        if (guessedLetters.Contains(currentLetter) || currentLetter == guess) // check if character i in guess is the same as currentLetter
+        {
+            guessedLetters.Add(currentLetter);// add the guessed letter to the list of guessed letters
+            builder.Append(currentLetter); // if letters match, currentLetter is appended to 'builder' string
+        }
+        else
+        {
+            builder.Append("_"); // otherwise, underscore is appended to builder string
+        }
+//    if (guess == currentLetter)
+//         {
+//             guessedLetters.Add(guess); // add the guessed letter to the list of guessed letters
+//         }
+    }
+
+    // Append underscores for the missing letters
+    for (int i = builder.Length; i < word.Length; i++)
+    {
+        builder.Append("_");
+    }
+
+    return builder.ToString();//converts builder string to regular string and returns it
+        
         }
 
         public int GetRemainingAttempts()
         {
             return counter;
         }
+        
+        public bool GuessLetter(char letter){
+                var guessedLetters = new List<char>();
+                if (this.word.IndexOf(letter) == -1) {
+                    counter --;
+                    return false;
+                }else {
+                    guessedLetters.Add(letter);
+                    return true;
+                }
+                
+
+    }
     }
 
     public class WordChoser {
@@ -48,5 +81,9 @@ namespace WordGame {
             return DICTIONARY[rand.Next(DICTIONARY.Length)];
         }
     }
-}
+
+    }
+
+
+
 
